@@ -3,5 +3,5 @@ compatibility_date = "2024-06-01"
 
 [[kv_namespaces]]
 binding = "PLAYLIST_KV"
-id = "YOUR_PRODUCTION_KV_ID"
+id = "d11ca59d1ea64e0f9c6d5b885733a511"
 preview_id = "YOUR_PREVIEW_KV_ID"
