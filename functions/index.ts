@@ -221,8 +221,22 @@ app.get('/proxy/:proto{http|https}/:rest{.*}', async c => {
 
 // ---- 修改为适配 Pages Functions 的导出方式 ----
 // 这个函数会接收 Pages 的上下文
-export const onRequest: PagesFunction<Env> = (context) => {
-  // 直接将请求传递给 Hono 实例处理
-  // context 包含了 request, env, next 等
-  return app.fetch(context.request, context.env, context);
-}
+// ---- 正确的适配 Pages Functions 的导出方式 ----
+export const onRequest: PagesFunction<Env> = async (context) => {
+  const { pathname } = new URL(context.request.url);
+
+  // 检查是否是 API 或代理请求
+  if (pathname.startsWith('/api/') || pathname.startsWith('/proxy/')) {
+    // 将这些动态请求传递给 Hono 实例处理
+    console.log(`Routing dynamic request to Hono: ${pathname}`); // 调试日志
+    return app.fetch(context.request, context.env, context);
+  }
+
+  // 如果不是 API 或代理请求，则交还给 Pages 处理静态文件
+  console.log(`Passing request to Pages static handler: ${pathname}`); // 调试日志
+  return context.next();
+};
+
+// 确保 Hono 实例 app 的定义在这之前
+// const app = new Hono<{ Bindings: Env }>()
+// ... app.get / app.post / app.get proxy 定义 ...
