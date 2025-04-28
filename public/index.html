@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="UTF-8">
+<title>M3U 订阅管理</title>
+<style>
+body{font-family:sans-serif;max-width:720px;margin:auto;padding:20px}
+input{width:80%;}
+</style>
+</head>
+<body>
+<h1>M3U 订阅管理</h1>
+<p>
+  <input id="m3u" placeholder="粘贴 M3U 地址">
+  <button onclick="add()">添加</button>
+</p>
+<ul id="subs"></ul>
+
+<script>
+async function loadSubs(){
+  const ul=document.getElementById('subs'); ul.innerHTML='加载中...'
+  const data=await fetch('/api/playlist').then(r=>r.json())
+  ul.innerHTML=''
+  data.forEach(p=>{
+    const li=document.createElement('li')
+    li.innerHTML=`<a href="?id=${p.id}">${p.name}</a> (${p.count})`
+    ul.appendChild(li)
+  })
+}
+
+async function add(){
+  const url=document.getElementById('m3u').value.trim()
+  if(!url) return alert('空地址')
+  await fetch('/api/playlist',{method:'POST',
+    headers:{'content-type':'application/json'},
+    body:JSON.stringify({url})})
+  loadSubs()
+}
+
+const qs=new URLSearchParams(location.search)
+const id=qs.get('id')
+if(id){
+  document.querySelector('h1').innerText='频道列表'
+  document.querySelector('p').remove()
+  const ul=document.getElementById('subs')
+  ul.innerHTML='加载中...'
+  fetch('/api/playlist/'+id).then(r=>r.json()).then(arr=>{
+    ul.innerHTML=''
+    arr.forEach((c,i)=>{
+      const li=document.createElement('li')
+      li.innerHTML=`<a href="player.html?id=${id}&idx=${i}">${c.name}</a>`
+      ul.appendChild(li)
+    })
+  })
+}else{
+  loadSubs()
+}
+</script>
+</body>
+</html>
