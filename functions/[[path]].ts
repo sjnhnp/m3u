@@ -110,12 +110,12 @@ app.get('/proxy/:scheme{http|https}/:rest{.*}', async c => {
   const target = `${scheme}://${rest}`
 
   /* 透传部分请求头（Range/UA/Referer） */
-  const fwdHeaders = new Headers()
-  ;['range', 'user-agent', 'referer'].forEach(k => {
-    const v = c.req.header(k)
-    if (v) fwdHeaders.set(k, v)
-  })
-  // fwdHeaders.set('host', new URL(target).host)
+const fwdHeaders = new Headers()
+;['range', 'user-agent', 'referer'].forEach(k => {
+  const v = c.req.header(k)
+  if (v) fwdHeaders.set(k, v)
+})
+  fwdHeaders.set('host', new URL(target).host)
 
   let upstream: Response
   try {
