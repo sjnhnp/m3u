@@ -115,7 +115,7 @@ app.get('/proxy/:scheme{http|https}/:rest{.*}', async c => {
     const v = c.req.header(k)
     if (v) fwdHeaders.set(k, v)
   })
-  fwdHeaders.set('host', new URL(target).host)
+  // fwdHeaders.set('host', new URL(target).host)
 
   let upstream: Response
   try {
