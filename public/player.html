@@ -30,16 +30,20 @@ fetch('/api/playlist/'+id)
  .catch(e=>alert(e))
 
 function play(src){
-  const video=document.getElementById('video')
+  const video = document.getElementById('video')
   if(Hls.isSupported()){
-    const hls=new Hls()
-    hls.loadSource(src)
+    const hls = new Hls()
+    // ✅ 强制将 /proxy/http/ 替换为 /proxy/https/
+    hls.loadSource(src.replace('/proxy/http/', '/proxy/https/'))
     hls.attachMedia(video)
-    hls.on(Hls.Events.ERROR,(e,d)=>console.error('HLS error',d))
-  }else if(video.canPlayType('application/vnd.apple.mpegurl')){
-    video.src=src
-  }else alert('此浏览器不支持 HLS')
+    hls.on(Hls.Events.ERROR, (e,d) => console.error('HLS error',d))
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')){
+    video.src = src.replace('/proxy/http/', '/proxy/https/')
+  } else {
+    alert('此浏览器不支持 HLS')
+  }
 }
+
 </script>
 </body>
 </html>
