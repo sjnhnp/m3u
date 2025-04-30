@@ -1,8 +1,0 @@
-{
-  "name": "m3u-player",
-  "version": "1.0.0",
-  "type": "module",
-  "dependencies": {
-    "hono": "^4.4.4"
-  }
-}
