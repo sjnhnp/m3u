@@ -1,7 +1,0 @@
-name = "m3u-player"
-compatibility_date = "2024-06-01"
-
-[[kv_namespaces]]
-binding = "PLAYLIST_KV"
-id = "92ecdc3002034e1f919c7748aa434bb5"
-preview_id = "YOUR_PREVIEW_KV_ID"
